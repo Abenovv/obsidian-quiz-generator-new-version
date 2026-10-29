@@ -1,0 +1,54 @@
+name: Publish plugin
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - main.js
+      - manifest.json
+      - styles.css
+      - versions.json
+      - SHA256SUMS
+      - RELEASE_NOTES.md
+      - scripts/verify-release.mjs
+      - .github/workflows/release.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quiz-generator-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Validate distribution
+        run: node scripts/verify-release.mjs
+
+      - name: Publish versioned plugin files
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_COMMIT: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(node -p 'JSON.parse(require("fs").readFileSync("manifest.json", "utf8")).version')"
+          if gh release view "$version" > /dev/null 2>&1; then
+            echo "Release $version already exists; leaving its assets unchanged."
+            exit 0
+          fi
+          gh release create "$version" main.js manifest.json styles.css SHA256SUMS \
+            --target "$RELEASE_COMMIT" \
+            --title "Quiz Generator $version" \
+            --notes-file RELEASE_NOTES.md \
+            --latest

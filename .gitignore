@@ -1,23 +1,29 @@
-# vscode
-.vscode 
-
-# Intellij
+# Dependencies and local tooling
+node_modules/
+.vscode/
+.idea/
 *.iml
-.idea
+.DS_Store
 
-# npm
-node_modules
+# Private Obsidian settings and study data
+data.json
+study-data.json
+**/data.json
+**/study-data.json
 
-# Don't include the compiled main.js file in the repo.
-# They should be uploaded to GitHub releases instead.
-main.js
+# Credentials and environment files
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+*.log
+
+# Build intermediates
+*.map
 main.css
 
-# Exclude sourcemaps
-*.map
-
-# obsidian
-data.json
-
-# Exclude macOS Finder (System Explorer) View States
-.DS_Store
+# main.js is intentionally tracked: this repository distributes the plugin bundle.
