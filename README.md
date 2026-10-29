@@ -1,87 +1,99 @@
-# Quiz Generator
+# Quiz Generator Continued
 
-Turn Obsidian notes into quizzes, then study at your own pace or under a timer.
+Generate quizzes from your Obsidian notes, save readable questions, and study with timers or flashcards.
 
-**Version 3.0.1** · [Download the latest release](https://github.com/Abenovv/obsidian-quiz-generator-new-version/releases/latest) · [MIT license](LICENSE)
+[Download the latest release](https://github.com/Abenovv/obsidian-quiz-generator-new-version/releases/latest) · [Release notes](CHANGELOG.md) · [MIT license](LICENSE)
 
-This edition adds a study library, more question formats, timed sessions, JSON editing, and four interface themes to Edward Cui's [original Quiz Generator](https://github.com/ECuiDev/obsidian-quiz-generator).
+An independently maintained continuation of Edward Cui's [Quiz Generator](https://github.com/ECuiDev/obsidian-quiz-generator). This edition keeps the original plugin ID and adds the study tools described below.
 
-## Study your way
+## What changed in 3.1.0
 
-| Mode | How it works |
+Saved quizzes look like notes again: a question, its context, and a collapsed **Answer**. The structured quiz data stays with the note, so advanced question formats can be reopened without showing a page of JSON.
+
+Existing `quiz-json` blocks render as readable question cards when the plugin is enabled. Use **Make saved quiz readable** on the active note to convert those blocks to native callouts. New callouts remain readable with the plugin disabled.
+
+![Readable questions with answer reveals](docs/images/readable-quiz.png)
+
+Preview of the note renderer using public sample questions.
+
+## Install or update
+
+Requires Obsidian 1.7.2 or newer.
+
+1. Download `main.js`, `manifest.json`, and `styles.css` from the [latest release](https://github.com/Abenovv/obsidian-quiz-generator-new-version/releases/latest).
+2. Put those three files in `.obsidian/plugins/quiz-generator/` inside your vault.
+3. Reload Obsidian, then enable **Quiz Generator Continued** under **Settings → Community plugins**.
+
+When updating, replace only those three files. Keep your local `data.json` and `study-data.json`. The release includes `SHA256SUMS` for checking the downloads.
+
+This continuation shares the `quiz-generator` plugin ID with the original. Install one edition at a time. The automatic source archives contain the development repository; they are not plugin installation packages.
+
+## Start studying
+
+Open **Open study studio** from the command palette or select the plugin's ribbon icon. From the studio, generate questions from notes, import a JSON quiz, create questions, or resume a session.
+
+Configure a provider under **Settings → Quiz Generator Continued → Models** before generating. Available providers are Google Gemini, OpenAI, Anthropic, Mistral, Cohere, Perplexity, and Ollama. Model discovery depends on your provider account; a manual model ID is also supported.
+
+Imported and manually created quizzes do not require an API key. Ollama can generate questions through a local model.
+
+| Mode | Use it for |
 | --- | --- |
-| Practice | Work through questions with feedback and explanations. |
-| Timed practice | Set a time limit for the whole quiz or each question. |
-| Exam | Answer under a timer; review answers after submitting. |
-| Flashcards | Reveal answers and rate recall with Again, Good, or Easy. |
-| Review | Revisit mistakes, skipped questions, or bookmarked items. |
+| Practice | Questions with feedback and explanations. |
+| Timed practice | A time limit for the whole quiz or each question. |
+| Exam | A timed attempt with answers held until submission. |
+| Flashcards | Recall practice with Again, Good, and Easy ratings. |
+| Review | Mistakes, skipped questions, and bookmarks. |
 
-The study studio keeps a quiz library, session history, and unfinished sessions. Flag questions during a session and return to them before submitting.
+The studio keeps your quiz library, session history, and unfinished sessions. Objective questions receive automatic scores. Short and long answers use self-review and do not count toward the automatic score.
 
-## Question formats
+## Questions and JSON
 
 The seven original formats remain: true/false, single choice, multiple answers, fill in the blanks, matching, short answer, and long answer.
 
-Ten additional formats support deeper practice: branching scenarios, sequencing, categorization, error correction, assertion and reason, prediction, evidence selection, answer and justification, concept maps, and what-if questions.
+Ten additional formats cover branching scenarios, sequencing, categorization, error correction, assertion and reason, prediction, evidence selection, answer and justification, concept maps, and what-if questions.
 
-Generation controls include difficulty, topic focus, language, hints, explanations, and source references. Edit a question directly or regenerate an individual question.
+Choose difficulty, topic focus, language, hints, explanations, and source references when generating. Edit individual questions or regenerate one question at a time.
 
-## Install
+Generation checks the requested question types and counts, removes duplicates and unrequested optional fields, and reports an error if too few valid questions remain. It accepts one complete JSON document from a fenced or narrated response and rejects ambiguous or incomplete output. Answers are not guessed or rewritten during cleanup.
 
-1. Download `main.js`, `manifest.json`, and `styles.css` from the [latest release](https://github.com/Abenovv/obsidian-quiz-generator-new-version/releases/latest). The automatic “Source code” archives are repository snapshots, not plugin packages.
-2. Create `.obsidian/plugins/quiz-generator/` inside your vault and place those three files there.
-3. Reload Obsidian and enable **Quiz Generator** under **Settings → Community plugins**.
+The plugin records the provider, model when available, and generation time once per quiz. These details describe its origin; they do not establish answer accuracy.
 
-If you are updating an existing installation, replace only those three files. Keep your local `data.json` and `study-data.json`.
+Import a question array, a legacy `{ "questions": [...] }` document, or a versioned quiz document. The editor validates a document before saving or exporting. Imports accept up to 500 questions and 2 MiB per document.
 
-The plugin ID is `quiz-generator`, so this edition uses the same installation folder as the original plugin. Install one edition at a time.
+Review generated questions before relying on them. Format validation can catch broken data; it cannot establish whether an answer is true.
 
-## Start a quiz
+## Appearance and feedback
 
-Open **Quiz Generator: Open study studio** from the command palette, or use the plugin's ribbon icon.
+Choose **Obsidian**, **Paper**, **Midnight**, or **High contrast**. The study interface adapts to narrow screens and includes keyboard focus indicators.
 
-To generate questions, open **Quiz Generator: Open generator**, select your notes, and choose the question formats. Configure your provider under **Settings → Quiz Generator → Models** first.
+Under **Study feedback**, turn on **Study sounds** for quiet answer-reveal tones, or use **Test sound** to preview one. Sound is off by default and generated locally. **Motion** can follow your system preference or stay reduced.
 
-Supported providers are Google Gemini, OpenAI, Anthropic, Mistral, Cohere, Perplexity, and Ollama. Model discovery and availability depend on the provider and your account; you can also enter a model ID manually.
+## Privacy
 
-You can import and edit JSON quizzes without a provider key. Ollama can generate questions through a local model.
+Provider keys are stored in your local `data.json`. Quiz history and unfinished sessions are stored in `study-data.json`. Both files are excluded from Git and release assets.
 
-## JSON and themes
+Generating with a hosted model sends the selected note content to the configured provider endpoint. Check your selected notes before generating. Local Ollama use and imported quizzes do not need a hosted provider key.
 
-Import a question array, a legacy `{ "questions": [...] }` document, or a versioned quiz document. The editor validates questions before saving or exporting. Imports accept up to 500 questions and 2 MiB per document.
+When reporting a bug, share a small example with private note content and credentials removed. Do not attach your settings or study-history files.
 
-Choose **Obsidian**, **Paper**, **Midnight**, or **High contrast** for the study interface. Layouts adapt to narrow screens, and controls include visible keyboard focus.
+## Development
 
-## Your data
+The 3.1 code is organized into typed modules for note rendering, generation quality, feedback, and integration. The build includes the pinned 3.0.1 runtime to preserve its existing study features.
 
-Provider keys belong in your local plugin settings. Obsidian stores those settings in `data.json`; treat that file as private. Quiz history and unfinished sessions use `study-data.json`.
-
-Neither file is included in this distribution. Both are excluded from Git, along with environment files and common credential files. Do not share your settings when reporting a problem.
-
-When you generate with a hosted provider, the selected note content is sent to that provider. Check the selected notes before generating. No live API key is needed for the release checks.
-
-## Scoring and limits
-
-Objective questions receive automatic scores. Short and long answers use self-review and do not count toward the automatic score. Review generated questions before relying on them.
-
-Exam mode delays answer feedback until submission. It is intended for personal study, not supervised or tamper-proof assessment.
-
-## Distribution and development
-
-The checked-in `main.js`, `manifest.json`, and `styles.css` are the installable 3.0.1 distribution. The existing `src/`, package files, and build configuration are retained from upstream 2.1.2 for reference. They do **not** reproduce this customized bundle; running the legacy build can overwrite `main.js`.
-
-To validate the distribution without installing dependencies:
+Use Node.js 24 or newer.
 
 ```sh
-node scripts/verify-release.mjs
+npm ci
+npm run typecheck
+npm test
+npm run build
+npm run verify:release
 ```
 
-The release workflow checks JavaScript syntax, manifest/version consistency, file hashes, tracked private-file exclusions, and common credential patterns before uploading the three runtime files and their checksums.
-
-The preceding development pass completed 88 automated tests, TypeScript checking, linting, and browser interaction checks. This distribution does not include that customized source or test harness. The publish checks do not make live provider requests.
+See [architecture and source status](docs/architecture.md) for the compatibility boundary. Earlier upstream source remains in the Git history.
 
 ## Credits
 
-Original plugin by **Edward Cui**. Customized edition maintained by **Yerkebulan Abenov**.
+Original plugin by **Edward Cui**. This continuation is maintained by **Yerkebulan Abenov** and is not an endorsed release from the original author.
 
-Distributed under the [MIT license](LICENSE), with the original copyright notice retained.
+The [MIT license](LICENSE) retains the original copyright notice.

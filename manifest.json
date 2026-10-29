@@ -1,10 +1,10 @@
 {
 	"id": "quiz-generator",
-	"name": "Quiz Generator",
-	"version": "3.0.1",
-	"minAppVersion": "0.15.0",
-	"description": "Create quizzes from your notes, edit JSON questions, and study with practice, exam, flashcard, and review modes.",
-	"author": "Edward Cui",
-	"authorUrl": "https://github.com/ECuiDev",
+	"name": "Quiz Generator Continued",
+	"version": "3.1.0",
+	"minAppVersion": "1.7.2",
+	"description": "Generate quizzes from notes, study with timers and flashcards, and save readable questions with structured JSON.",
+	"author": "Edward Cui; continued by Yerkebulan Abenov",
+	"authorUrl": "https://github.com/Abenovv/obsidian-quiz-generator-new-version",
 	"isDesktopOnly": false
 }

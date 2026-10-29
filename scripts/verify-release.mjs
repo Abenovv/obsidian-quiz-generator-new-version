@@ -8,8 +8,10 @@ process.chdir(fileURLToPath(new URL("../", import.meta.url)));
 const runtimeFiles = ["main.js", "manifest.json", "styles.css"];
 const manifest = JSON.parse(readFileSync("manifest.json", "utf8"));
 const versions = JSON.parse(readFileSync("versions.json", "utf8"));
+const packageInfo = JSON.parse(readFileSync("package.json", "utf8"));
 
 assert.equal(manifest.id, "quiz-generator");
+assert.equal(packageInfo.version, manifest.version);
 assert.match(manifest.version, /^\d+\.\d+\.\d+$/);
 assert.equal(versions[manifest.version], manifest.minAppVersion);
 assert.equal(manifest.isDesktopOnly, false);
